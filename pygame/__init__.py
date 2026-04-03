@@ -27,6 +27,10 @@ class Rect:
         self.x = left
         self.y = top
     
+    def collidepoint(self, point):
+        x, y = point
+        return self.left <= x <= self.left + self.width and self.top <= y <= self.top + self.height
+    
     def get_rect(self):
         return self
 
@@ -59,7 +63,6 @@ class Surface:
     def set_alpha(self, alpha):
         pass
     
-    # THÊM METHOD NÀY - QUAN TRỌNG
     def get_rect(self):
         if self._rect is None:
             self._rect = Rect(0, 0, self.width, self.height)
@@ -82,12 +85,24 @@ class RenderPlain:
     def __iter__(self):
         return iter(self.sprites)
 
+# FIXED: class sprite với method spritecollide đúng cú pháp
 class sprite:
     Sprite = Sprite
     RenderPlain = RenderPlain
     
-    def spritecollide(self, sprite, group, dokill):
-        return []
+    @staticmethod
+    def spritecollide(sprite, group, dokill):
+        """Trả về danh sách sprite va chạm"""
+        collisions = []
+        if hasattr(group, 'sprites'):
+            for s in group.sprites:
+                if hasattr(s, 'rect') and hasattr(sprite, 'rect'):
+                    if (s.rect.left < sprite.rect.left + sprite.rect.width and
+                        s.rect.left + s.rect.width > sprite.rect.left and
+                        s.rect.top < sprite.rect.top + sprite.rect.height and
+                        s.rect.top + s.rect.height > sprite.rect.top):
+                        collisions.append(s)
+        return collisions
 
 class display:
     _screen = None
