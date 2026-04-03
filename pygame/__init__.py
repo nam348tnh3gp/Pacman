@@ -84,6 +84,16 @@ class RenderPlain:
     
     def __iter__(self):
         return iter(self.sprites)
+    
+    def __len__(self):
+        return len(self.sprites)
+    
+    def remove(self, sprite):
+        if sprite in self.sprites:
+            self.sprites.remove(sprite)
+    
+    def empty(self):
+        self.sprites = []
 
 # FIXED: class sprite với method spritecollide đúng cú pháp
 class sprite:
@@ -102,6 +112,8 @@ class sprite:
                         s.rect.top < sprite.rect.top + sprite.rect.height and
                         s.rect.top + s.rect.height > sprite.rect.top):
                         collisions.append(s)
+                        if dokill and hasattr(group, 'remove'):
+                            group.remove(s)
         return collisions
 
 class display:
@@ -170,28 +182,3 @@ class time:
         
         def tick(self, fps):
             import time
-            time.sleep(1.0 / fps)
-
-class event:
-    @staticmethod
-    def get():
-        return []
-
-class key:
-    K_LEFT = 276
-    K_RIGHT = 275
-    K_UP = 273
-    K_DOWN = 274
-    K_ESCAPE = 27
-    K_RETURN = 13
-
-class draw:
-    @staticmethod
-    def ellipse(surface, color, rect):
-        pass
-
-def init():
-    pass
-
-def quit():
-    pass
