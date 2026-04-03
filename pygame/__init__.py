@@ -1,19 +1,21 @@
-# pygame/__init__.py - Fake PyGame package (FULL FIXED)
+# pygame/__init__.py - ASCII Terminal version
 
 from ._view import _view
 from .locals import *
+import os
+import sys
 
-# Màu sắc
+# Màu sắc (mã ANSI cho terminal)
 class Color:
-    BLACK = (0,0,0)
-    WHITE = (255,255,255)
-    BLUE = (0,0,255)
-    GREEN = (0,255,0)
-    RED = (255,0,0)
-    PURPLE = (255,0,255)
-    YELLOW = (255,255,0)
+    BLACK = '\033[30m'
+    WHITE = '\033[37m'
+    BLUE = '\033[34m'
+    GREEN = '\033[32m'
+    RED = '\033[31m'
+    PURPLE = '\033[35m'
+    YELLOW = '\033[33m'
+    RESET = '\033[0m'
 
-# Hằng số
 QUIT = 12
 KEYDOWN = 2
 KEYUP = 3
@@ -37,13 +39,10 @@ class Rect:
 class Surface:
     def __init__(self, size):
         self.size = size
-        if isinstance(size, (list, tuple)):
-            self.width = size[0]
-            self.height = size[1] if len(size) > 1 else size[0]
-        else:
-            self.width = size
-            self.height = size
+        self.width = size[0] if isinstance(size, (list, tuple)) else size
+        self.height = size[1] if isinstance(size, (list, tuple)) and len(size) > 1 else size
         self._rect = None
+        self.buffer = [[' ' for _ in range(self.width)] for _ in range(self.height)]
     
     def fill(self, color):
         pass
@@ -95,14 +94,12 @@ class RenderPlain:
     def empty(self):
         self.sprites = []
 
-# FIXED: class sprite với method spritecollide đúng cú pháp
 class sprite:
     Sprite = Sprite
     RenderPlain = RenderPlain
     
     @staticmethod
     def spritecollide(sprite, group, dokill):
-        """Trả về danh sách sprite va chạm"""
         collisions = []
         if hasattr(group, 'sprites'):
             for s in group.sprites:
@@ -121,12 +118,13 @@ class display:
     
     @staticmethod
     def set_mode(size):
+        os.system('clear')
         display._screen = Surface(size)
         return display._screen
     
     @staticmethod
     def set_caption(title):
-        pass
+        print(f"\033]0;{title}\007", end='')
     
     @staticmethod
     def set_icon(icon):
@@ -134,7 +132,11 @@ class display:
     
     @staticmethod
     def flip():
-        pass
+        if display._screen:
+            sys.stdout.write('\033[H')
+            for row in display._screen.buffer:
+                print(''.join(row))
+            sys.stdout.flush()
 
 class image:
     @staticmethod
@@ -187,6 +189,20 @@ class time:
 class event:
     @staticmethod
     def get():
+        import sys
+        import select
+        if select.select([sys.stdin], [], [], 0)[0]:
+            key = sys.stdin.read(1)
+            if key == 'a':
+                return [type('Event', (), {'type': KEYDOWN, 'key': K_LEFT})()]
+            elif key == 'd':
+                return [type('Event', (), {'type': KEYDOWN, 'key': K_RIGHT})()]
+            elif key == 'w':
+                return [type('Event', (), {'type': KEYDOWN, 'key': K_UP})()]
+            elif key == 's':
+                return [type('Event', (), {'type': KEYDOWN, 'key': K_DOWN})()]
+            elif key == 'q':
+                return [type('Event', (), {'type': QUIT})()]
         return []
 
 class key:
@@ -202,18 +218,12 @@ class draw:
     def ellipse(surface, color, rect):
         pass
 
-# QUAN TRỌNG: Đảm bảo các hàm init() và quit() ở global scope
 def init():
-    """Khởi tạo pygame (fake)"""
-    # Khởi tạo các module con nếu cần
     font.init()
     mixer.init()
-    pass
 
 def quit():
-    """Thoát pygame (fake)"""
     pass
 
-# Thêm version để tránh lỗi
 VER = (2, 5, 0)
 __version__ = '2.5.0'
