@@ -1,10 +1,9 @@
-# pygame.py - Fake PyGame module for Pacman
-# Đặt file này cùng thư mục với game Pacman
+# pygame/__init__.py - Fake PyGame package
 
-class _view:
-    pass
+from ._view import _view
+from .locals import *
 
-# Màu sắc (để tương thích)
+# Màu sắc
 class Color:
     BLACK = (0,0,0)
     WHITE = (255,255,255)
@@ -14,13 +13,7 @@ class Color:
     PURPLE = (255,0,255)
     YELLOW = (255,255,0)
 
-# Các hằng số key
-K_LEFT = 276
-K_RIGHT = 275
-K_UP = 273
-K_DOWN = 274
-K_ESCAPE = 27
-K_RETURN = 13
+# Hằng số
 QUIT = 12
 KEYDOWN = 2
 KEYUP = 3
@@ -151,8 +144,7 @@ class time:
         
         def tick(self, fps):
             import time
-            sleep_time = 1.0 / fps
-            time.sleep(sleep_time)
+            time.sleep(1.0 / fps)
 
 class event:
     @staticmethod
@@ -172,12 +164,8 @@ class draw:
     def ellipse(surface, color, rect):
         pass
 
-# Hàm chính
 def init():
     pass
 
 def quit():
     pass
-
-# Biến toàn cục
-display.set_mode([606, 606])
