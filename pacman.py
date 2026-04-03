@@ -1,8 +1,11 @@
-#Pacman in Python with PyGame
-#https://github.com/hbokmann/Pacman
-  
+# Pacman in Python - Chạy không cần pygame
+# Thêm dòng này để ưu tiên dùng file pygame.py hiện tại
+import sys
+sys.path.insert(0, '.')  # ưu tiên thư mục hiện tại
+
+# Phần còn lại GIỮ NGUYÊN code gốc
 import pygame._view
-  
+
 black = (0,0,0)
 white = (255,255,255)
 blue = (0,0,255)
