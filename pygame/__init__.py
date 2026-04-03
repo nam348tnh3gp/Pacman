@@ -1,4 +1,4 @@
-# pygame/__init__.py - Fake PyGame package
+# pygame/__init__.py - Fake PyGame package (FULL FIXED)
 
 from ._view import _view
 from .locals import *
@@ -33,8 +33,13 @@ class Rect:
 class Surface:
     def __init__(self, size):
         self.size = size
-        self.width = size[0] if isinstance(size, (list, tuple)) else size
-        self.height = size[1] if isinstance(size, (list, tuple)) and len(size) > 1 else size
+        if isinstance(size, (list, tuple)):
+            self.width = size[0]
+            self.height = size[1] if len(size) > 1 else size[0]
+        else:
+            self.width = size
+            self.height = size
+        self._rect = None
     
     def fill(self, color):
         pass
@@ -53,6 +58,12 @@ class Surface:
     
     def set_alpha(self, alpha):
         pass
+    
+    # THÊM METHOD NÀY - QUAN TRỌNG
+    def get_rect(self):
+        if self._rect is None:
+            self._rect = Rect(0, 0, self.width, self.height)
+        return self._rect
 
 class Sprite:
     def __init__(self):
