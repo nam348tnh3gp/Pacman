@@ -182,3 +182,38 @@ class time:
         
         def tick(self, fps):
             import time
+            time.sleep(1.0 / fps)
+
+class event:
+    @staticmethod
+    def get():
+        return []
+
+class key:
+    K_LEFT = 276
+    K_RIGHT = 275
+    K_UP = 273
+    K_DOWN = 274
+    K_ESCAPE = 27
+    K_RETURN = 13
+
+class draw:
+    @staticmethod
+    def ellipse(surface, color, rect):
+        pass
+
+# QUAN TRỌNG: Đảm bảo các hàm init() và quit() ở global scope
+def init():
+    """Khởi tạo pygame (fake)"""
+    # Khởi tạo các module con nếu cần
+    font.init()
+    mixer.init()
+    pass
+
+def quit():
+    """Thoát pygame (fake)"""
+    pass
+
+# Thêm version để tránh lỗi
+VER = (2, 5, 0)
+__version__ = '2.5.0'
